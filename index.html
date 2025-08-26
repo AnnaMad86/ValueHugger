@@ -1,295 +1,530 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Value Hugger - Refurbished Waschmaschinen</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Value Hugger – Refurbished Waschmaschinen</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981'
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .star-rating { color: #FCD34D; }
-        .filter-chip { transition: all 0.2s; }
-        .filter-chip:hover { transform: translateY(-1px); }
-        .product-card { transition: all 0.3s; }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .chatbot-toggle { animation: pulse 2s infinite; }
+      :root { --vh: 1vh; }
+      html, body { height: 100%; }
+      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji'; }
+      .star { width: 18px; height: 18px; fill: currentColor; }
+      .glass { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+      .scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+      .scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+      .chip { @apply px-3 py-1 rounded-full text-sm border bg-white hover:bg-slate-50 transition; }
     </style>
-</head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  </head>
+  <body class="bg-gradient-to-b from-slate-50 to-white text-slate-800">
     <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="text-2xl font-bold text-primary">💧</div>
-                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Value Hugger</h1>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Refurbished Waschmaschinen</span>
-                </div>
-                <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
-                    <span class="dark:hidden">🌙</span>
-                    <span class="hidden dark:inline">☀️</span>
-                </button>
-            </div>
+    <header class="sticky top-0 z-40 glass bg-white/70 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white grid place-items-center font-black">VH</div>
+          <div>
+            <div class="font-extrabold leading-tight">Value Hugger</div>
+            <div class="text-xs text-slate-500 -mt-0.5">Refurbished. Nachhaltig. Fair.</div>
+          </div>
         </div>
+        <nav class="ml-auto hidden md:flex items-center gap-6 text-sm">
+          <a href="#produkte" class="hover:text-emerald-700">Produkte</a>
+          <a href="#vergleich" class="hover:text-emerald-700">Vergleich</a>
+          <a href="#faq" class="hover:text-emerald-700">FAQ</a>
+          <a href="#kontakt" class="hover:text-emerald-700">Kontakt</a>
+        </nav>
+        <button id="themeToggle" class="ml-3 text-sm border px-3 py-1.5 rounded-xl hover:bg-slate-50">☀️/🌙</button>
+      </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Filter Section -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filter & Suche</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <input type="text" id="searchInput" placeholder="Marke oder Modell suchen..." 
-                       class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
-                
-                <select id="priceFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
-                    <option value="">Alle Preise</option>
-                    <option value="0-300">Bis 300€</option>
-                    <option value="300-500">300€ - 500€</option>
-                    <option value="500-800">500€ - 800€</option>
-                    <option value="800+">Über 800€</option>
-                </select>
-
-                <select id="capacityFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
-                    <option value="">Alle Kapazitäten</option>
-                    <option value="5-7">5-7 kg</option>
-                    <option value="8-9">8-9 kg</option>
-                    <option value="10+">10+ kg</option>
-                </select>
-
-                <select id="energyFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
-                    <option value="">Alle Energieklassen</option>
-                    <option value="A+++">A+++</option>
-                    <option value="A++">A++</option>
-                    <option value="A+">A+</option>
-                    <option value="A">A</option>
-                </select>
+    <!-- Hero -->
+    <section class="relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+              Refurbished Waschmaschinen, 
+              <span class="text-emerald-700">gründlich geprüft</span> & sofort lieferbar
+            </h1>
+            <p class="mt-4 text-slate-600 max-w-prose">
+              Spare Geld und Ressourcen: Unsere Geräte werden professionell aufbereitet, mit Garantie versehen und über einen fairen Preis angeboten. Finde mit Filtern schnell das passende Modell, vergleiche Merkmale – und stelle Fragen direkt im Chat.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a href="#produkte" class="px-5 py-3 rounded-2xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700">Jetzt stöbern</a>
+              <a href="#vorteile" class="px-5 py-3 rounded-2xl border font-semibold hover:bg-slate-50">Warum refurbished?</a>
             </div>
+            <div class="mt-6 flex items-center gap-4 text-sm text-slate-600">
+              <div class="flex items-center gap-1">🔧 24‑Punkte‑Check</div>
+              <div class="flex items-center gap-1">♻️ 12 Monate Gewährleistung</div>
+              <div class="flex items-center gap-1">🚚 Lieferung & Altgerät‑Mitnahme</div>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="aspect-[4/3] rounded-3xl bg-[url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center shadow-xl"></div>
+            <div class="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow p-4 border">
+              <div class="text-xs text-slate-500">Durchschn. Kundenzufriedenheit</div>
+              <div class="flex items-end gap-2">
+                <div class="text-3xl font-extrabold">4,7</div>
+                <div class="text-xs text-slate-500">/ 5</div>
+              </div>
+              <div class="mt-1 flex">
+                <span class="text-amber-400">★★★★★</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <div class="flex flex-wrap gap-2 mb-4">
-                <label class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">Marke:</span>
+    <!-- Vorteile -->
+    <section id="vorteile" class="py-10 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-6">
+        <div class="p-6 bg-slate-50 rounded-3xl border shadow-sm">
+          <h3 class="font-bold text-lg">Sorgfältig geprüft</h3>
+          <p class="mt-2 text-slate-600">Jedes Gerät durchläuft unseren 24‑Punkte‑Check inkl. Dichtigkeits‑, Elektrik‑ und Hygienetest. Sichtspuren werden klassifiziert (A/B).</p>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-3xl border shadow-sm">
+          <h3 class="font-bold text-lg">Transparent bewertet</h3>
+          <p class="mt-2 text-slate-600">Echte Kund*innenbewertungen mit Sternen & Kommentaren. Vergleiche Spezifikationen, Energieklasse und Folgekosten.</p>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-3xl border shadow-sm">
+          <h3 class="font-bold text-lg">Rundum sorglos</h3>
+          <p class="mt-2 text-slate-600">Lieferung, Einbau & Altgerät‑Mitnahme optional. 12 Monate Gewährleistung inklusive.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Produkte -->
+    <section id="produkte" class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Filter -->
+          <aside class="lg:w-80 flex-shrink-0 space-y-4">
+            <div class="p-5 rounded-3xl border bg-white shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-lg">Filter</h3>
+                <button id="resetFilters" class="text-sm text-emerald-700 hover:underline">Zurücksetzen</button>
+              </div>
+              <div class="mt-4 space-y-4">
+                <label class="block text-sm">Suche
+                  <input id="q" type="text" placeholder="Marke/Modell" class="mt-1 w-full border rounded-xl px-3 py-2" />
                 </label>
-                <div id="brandFilters" class="flex flex-wrap gap-2">
-                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Bosch">Bosch</button>
-                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Siemens">Siemens</button>
-                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Miele">Miele</button>
-                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Samsung">Samsung</button>
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="block text-sm">Preis bis (€)
+                    <input id="priceMax" type="number" min="0" step="10" class="mt-1 w-full border rounded-xl px-3 py-2" />
+                  </label>
+                  <label class="block text-sm">Füllmenge ab (kg)
+                    <input id="capacityMin" type="number" min="0" step="0.5" class="mt-1 w-full border rounded-xl px-3 py-2" />
+                  </label>
                 </div>
+                <label class="block text-sm">Energieklasse
+                  <select id="energy" class="mt-1 w-full border rounded-xl px-3 py-2">
+                    <option value="">Alle</option>
+                    <option>A</option><option>B</option><option>C</option><option>D</option>
+                  </select>
+                </label>
+                <label class="block text-sm">Marke
+                  <select id="brand" class="mt-1 w-full border rounded-xl px-3 py-2">
+                    <option value="">Alle</option>
+                    <option>Bosch</option>
+                    <option>Siemens</option>
+                    <option>AEG</option>
+                    <option>LG</option>
+                    <option>Samsung</option>
+                    <option>Miele</option>
+                  </select>
+                </label>
+                <label class="block text-sm">Zustand
+                  <select id="condition" class="mt-1 w-full border rounded-xl px-3 py-2">
+                    <option value="">Alle</option>
+                    <option value="A">A – sehr gut</option>
+                    <option value="B">B – gut</option>
+                  </select>
+                </label>
+                <label class="block text-sm">Min. Bewertung
+                  <select id="ratingMin" class="mt-1 w-full border rounded-xl px-3 py-2">
+                    <option value="0">Alle</option>
+                    <option value="3">3+</option>
+                    <option value="4">4+</option>
+                    <option value="4.5">4.5+</option>
+                  </select>
+                </label>
+                <label class="block text-sm">Sortieren nach
+                  <select id="sortBy" class="mt-1 w-full border rounded-xl px-3 py-2">
+                    <option value="relevance">Empfehlung</option>
+                    <option value="priceAsc">Preis ↑</option>
+                    <option value="priceDesc">Preis ↓</option>
+                    <option value="ratingDesc">Bewertung ↓</option>
+                    <option value="capacityDesc">Füllmenge ↓</option>
+                  </select>
+                </label>
+              </div>
             </div>
+            <div class="p-5 rounded-3xl border bg-emerald-50/60 text-emerald-900">
+              <h4 class="font-semibold">Tipp</h4>
+              <p class="text-sm mt-1">Unsicher bei der Wahl? Öffne unten rechts den Chat – wir helfen dir in wenigen Schritten zur passenden Maschine.</p>
+            </div>
+          </aside>
 
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <label class="flex items-center space-x-2">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">Min. Bewertung:</span>
-                        <select id="ratingFilter" class="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-                            <option value="">Alle</option>
-                            <option value="4">4+ ⭐</option>
-                            <option value="4.5">4.5+ ⭐</option>
-                        </select>
-                    </label>
-                </div>
-                <select id="sortBy" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
-                    <option value="price-asc">Preis aufsteigend</option>
-                    <option value="price-desc">Preis absteigend</option>
-                    <option value="rating-desc">Beste Bewertung</option>
-                    <option value="capacity-desc">Größte Kapazität</option>
-                </select>
+          <!-- Produktliste -->
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-2xl font-extrabold">Verfügbare Geräte</h2>
+              <button id="compareBtn" class="px-4 py-2 rounded-xl border bg-white shadow-sm disabled:opacity-50">Vergleichen (<span id="compareCount">0</span>)</button>
             </div>
+            <div id="results" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Compare Bar -->
-        <div id="compareBar" class="bg-primary text-white rounded-lg p-4 mb-6 hidden">
-            <div class="flex justify-between items-center">
-                <div>
-                    <span class="font-semibold">Vergleich (<span id="compareCount">0</span>/3)</span>
-                    <div id="compareItems" class="flex space-x-2 mt-1"></div>
-                </div>
-                <div class="space-x-2">
-                    <button id="compareBtn" class="bg-white text-primary px-4 py-2 rounded-lg font-medium hover:bg-gray-100">Vergleichen</button>
-                    <button id="clearCompare" class="bg-red-500 px-4 py-2 rounded-lg font-medium hover:bg-red-600">Leeren</button>
-                </div>
-            </div>
+    <!-- Vergleich Modal -->
+    <dialog id="compareModal" class="backdrop:bg-black/50 rounded-2xl w-11/12 max-w-5xl">
+      <form method="dialog" class="p-0">
+        <div class="p-4 border-b flex items-center justify-between">
+          <div class="font-bold text-lg">Geräte vergleichen</div>
+          <button class="px-3 py-1 rounded-xl border">Schließen</button>
         </div>
+        <div class="overflow-x-auto scrollbar">
+          <table class="min-w-full table-fixed">
+            <thead>
+              <tr class="bg-slate-50">
+                <th class="p-3 text-left w-64">Merkmal</th>
+                <th id="th0" class="p-3 text-left"></th>
+                <th id="th1" class="p-3 text-left"></th>
+                <th id="th2" class="p-3 text-left"></th>
+              </tr>
+            </thead>
+            <tbody id="compareBody" class="divide-y"></tbody>
+          </table>
+        </div>
+      </form>
+    </dialog>
 
-        <!-- Product Grid -->
-        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Products will be dynamically inserted here -->
+    <!-- FAQ -->
+    <section id="faq" class="py-12 bg-slate-50 border-t">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-extrabold">Häufige Fragen</h2>
+        <div class="mt-6 grid gap-4">
+          <details class="bg-white rounded-2xl border p-4">
+            <summary class="font-semibold cursor-pointer">Was bedeutet Zustand A/B?</summary>
+            <p class="mt-2 text-slate-600">A = minimale optische Spuren; B = sichtbare, aber rein kosmetische Spuren. Technisch sind beide Klassen voll funktionsfähig und getestet.</p>
+          </details>
+          <details class="bg-white rounded-2xl border p-4">
+            <summary class="font-semibold cursor-pointer">Wie alt sind die Geräte?</summary>
+            <p class="mt-2 text-slate-600">Typisch 1–5 Jahre. Wir zeigen dir im Datenblatt die Laufzeit‑Schätzung und Anzahl Prüfzyklen.</p>
+          </details>
+          <details class="bg-white rounded-2xl border p-4">
+            <summary class="font-semibold cursor-pointer">Gibt es Lieferung & Altgerät‑Mitnahme?</summary>
+            <p class="mt-2 text-slate-600">Ja, wähle beim Checkout die Option „Lieferung & Mitnahme Altgerät“ (zzgl. Servicepauschale).</p>
+          </details>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <!-- Compare Modal -->
-    <div id="compareModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Produktvergleich</h2>
-                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl">&times;</button>
-                </div>
-                <div id="compareContent" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Compare content will be inserted here -->
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Kontakt -->
+    <section id="kontakt" class="py-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-2xl font-extrabold">Kontakt</h2>
+        <p class="mt-2 text-slate-600">Fragen zu einem Modell oder zum Ablauf? Schreib uns im Chat oder per E‑Mail: <a class="text-emerald-700 underline" href="mailto:hallo@valuehugger.example">hallo@valuehugger.example</a></p>
+      </div>
+    </section>
 
-    <!-- Chatbot -->
-    <div id="chatbot" class="fixed bottom-6 right-6 z-40">
-        <button id="chatToggle" class="chatbot-toggle bg-primary text-white rounded-full p-4 shadow-lg hover:bg-blue-600">
-            💬
-        </button>
-        <div id="chatWindow" class="hidden absolute bottom-16 right-0 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border dark:border-gray-700">
-            <div class="p-4 bg-primary text-white rounded-t-lg">
-                <h3 class="font-semibold">Waschmaschinen-Berater</h3>
-                <p class="text-sm opacity-90">Fragen Sie mich alles!</p>
-            </div>
-            <div id="chatMessages" class="h-64 overflow-y-auto p-4 space-y-3">
-                <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
-                    <p class="text-sm">Hallo! Ich helfe Ihnen gerne bei der Auswahl Ihrer Waschmaschine. Was ist Ihr Budget?</p>
-                </div>
-            </div>
-            <div class="p-4 border-t dark:border-gray-700">
-                <div id="quickOptions" class="space-y-2 mb-3">
-                    <button class="chat-option w-full text-left p-2 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded" data-option="budget">💰 Budget unter 400€</button>
-                    <button class="chat-option w-full text-left p-2 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded" data-option="family">👨‍👩‍👧‍👦 Familienhaushalt (4+ Personen)</button>
-                    <button class="chat-option w-full text-left p-2 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded" data-option="diagnosis">🔧 Ferndiagnose starten</button>
-                </div>
-                <input type="text" id="chatInput" placeholder="Ihre Nachricht..." class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            </div>
+    <!-- Chatbot Floating -->
+    <button id="chatFab" class="fixed bottom-5 right-5 z-40 rounded-full shadow-2xl bg-emerald-600 text-white w-14 h-14 grid place-items-center text-2xl">💬</button>
+
+    <dialog id="chatDialog" class="backdrop:bg-black/50 rounded-2xl w-[min(680px,95vw)]">
+      <form method="dialog" class="p-0">
+        <div class="p-4 border-b flex items-center justify-between">
+          <div>
+            <div class="font-bold">Value Hugger Assist</div>
+            <div class="text-xs text-slate-500 -mt-0.5">Fragen & Ferndiagnose (Beta)</div>
+          </div>
+          <button class="px-3 py-1 rounded-xl border">Schließen</button>
         </div>
-    </div>
+        <div id="chatLog" class="p-4 h-96 overflow-y-auto space-y-3 bg-slate-50"></div>
+        <div class="p-4 border-t flex items-center gap-2">
+          <input id="chatInput" placeholder="Frag etwas… z.B. Welche Maschine ist leise?" class="flex-1 border rounded-xl px-3 py-2"/>
+          <button id="sendMsg" class="px-4 py-2 rounded-xl bg-emerald-600 text-white">Senden</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-sm text-slate-500 border-t">
+      © <span id="year"></span> Value Hugger – Refurbished Großgeräte. Made with ♻️
+    </footer>
 
     <script>
-        // Sample product data
-        const products = [
-            {
-                id: 1,
-                brand: 'Bosch',
-                model: 'WAG28400',
-                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzMzMzMzMyIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5Cb3NjaDwvdGV4dD4KPC9zdmc+',
-                price: 349,
-                originalPrice: 599,
-                rating: 4.2,
-                reviews: 84,
-                capacity: '9 kg',
-                energy: 'A+++',
-                condition: 'Sehr gut',
-                features: ['Aqua Stop', 'EcoSilence Drive', 'VarioTrommel'],
-                specs: {
-                    'Fassungsvermögen': '9 kg',
-                    'Energieeffizienz': 'A+++',
-                    'Schleuderdrehzahl': '1400 U/min',
-                    'Geräuschpegel': '48 dB',
-                    'Programme': '15',
-                    'Display': 'LED',
-                    'Abmessungen': '60x59x85 cm'
-                }
-            },
-            {
-                id: 2,
-                brand: 'Siemens',
-                model: 'WM14N140',
-                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzAwNzlCRiIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMDA3OUJGIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5TaWVtZW5zPC90ZXh0Pgo8L3N2Zz4=',
-                price: 399,
-                originalPrice: 699,
-                rating: 4.5,
-                reviews: 127,
-                capacity: '8 kg',
-                energy: 'A+++',
-                condition: 'Wie neu',
-                features: ['iQdrive Motor', 'speedPack', 'Outdoor-Programm'],
-                specs: {
-                    'Fassungsvermögen': '8 kg',
-                    'Energieeffizienz': 'A+++',
-                    'Schleuderdrehzahl': '1400 U/min',
-                    'Geräuschpegel': '44 dB',
-                    'Programme': '16',
-                    'Display': 'LED',
-                    'Abmessungen': '60x55x85 cm'
-                }
-            },
-            {
-                id: 3,
-                brand: 'Miele',
-                model: 'WDB030 EcoPlus',
-                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0U2MTUxNSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjRTYxNTE1Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5NaWVsZTwvdGV4dD4KPC9zdmc+',
-                price: 649,
-                originalPrice: 1199,
-                rating: 4.8,
-                reviews: 89,
-                capacity: '7 kg',
-                energy: 'A+++',
-                condition: 'Sehr gut',
-                features: ['ProfiEco Motor', 'QuickPowerWash', 'AddLoad'],
-                specs: {
-                    'Fassungsvermögen': '7 kg',
-                    'Energieeffizienz': 'A+++',
-                    'Schleuderdrehzahl': '1400 U/min',
-                    'Geräuschpegel': '46 dB',
-                    'Programme': '12',
-                    'Display': 'TwinDos AutoDos',
-                    'Abmessungen': '60x64x85 cm'
-                }
-            },
-            {
-                id: 4,
-                brand: 'Samsung',
-                model: 'WW90TA049AE',
-                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0iIzFFMzA0QSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjQwIiBmaWxsPSIjNEY0NkU1Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMzAiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeD0iMzAiIHk9IjE3MCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIzMCIgcng9IjUiIGZpbGw9IiM0RjQ2RTUiLz4KPHRleHQgeD0iMTAwIiB5PSIyMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2NjY2NjYiIGZvbnQtc2l6ZT0iMTIiPlNhbXN1bmc8L3RleHQ+Cjwvc3ZnPg==',
-                price: 289,
-                originalPrice: 549,
-                rating: 4.1,
-                reviews: 156,
-                capacity: '9 kg',
-                energy: 'A+++',
-                condition: 'Gut',
-                features: ['EcoBubble', 'Digital Inverter', 'Steam Wash'],
-                specs: {
-                    'Fassungsvermögen': '9 kg',
-                    'Energieeffizienz': 'A+++',
-                    'Schleuderdrehzahl': '1400 U/min',
-                    'Geräuschpegel': '52 dB',
-                    'Programme': '14',
-                    'Display': 'Digital',
-                    'Abmessungen': '60x55x85 cm'
-                }
-            },
-            {
-                id: 5,
-                brand: 'Bosch',
-                model: 'WAT28400',
-                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzMzMzMzMyIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5Cb3NjaDwvdGV4dD4KPC9zdmc+',
-                price: 459,
-                originalPrice: 799,
-                rating: 4.6,
-                reviews: 203,
-                capacity: '8 kg',
-                energy: 'A+++',
-                condition: 'Wie neu',
-                features: ['i-DOS', 'ActiveWater Plus', 'AllergiePlus'],
-                specs: {
-                    'Fassungsvermögen': '8 kg',
-                    'Energieeffizienz': 'A+++',
-                    'Schleuderdrehzahl': '1400 U/min',
-                    'Geräuschpegel': '47 dB',
-                    'Programme': '15',
-                    'Display': 'LED mit Touch-Control',
-                    'Abmessungen': '60x59x85 cm'
-                }
-            },
-            {
-                id: 6,
+      // --- Demo Daten ---
+      const PRODUCTS = [
+        {id: 'w1', brand: 'Bosch', model: 'Series 6 WUU28T40', price: 339, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.7, reviews: 183, features: ['AquaStop', 'EcoSilence', 'Kurz 15'], img: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w2', brand: 'Siemens', model: 'iQ500 WM14G491', price: 319, capacity: 9, rpm: 1400, energy: 'B', width: 60, depth: 59, noise: 74, condition: 'B', rating: 4.5, reviews: 95, features: ['varioSpeed', 'iQdrive'], img: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w3', brand: 'AEG', model: 'L7FE74485', price: 299, capacity: 8, rpm: 1600, energy: 'B', width: 60, depth: 57, noise: 76, condition: 'A', rating: 4.6, reviews: 121, features: ['ProSteam', 'ProSense'], img: 'https://images.unsplash.com/photo-1564445824725-3d2f1f9b9d02?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w4', brand: 'LG', model: 'F4WV508S0', price: 289, capacity: 8, rpm: 1400, energy: 'C', width: 60, depth: 56, noise: 73, condition: 'B', rating: 4.3, reviews: 64, features: ['AI Direct Drive', 'Steam+'], img: 'https://images.unsplash.com/photo-1502021680532-838cfc650323?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w5', brand: 'Samsung', model: 'WW80T534AAX', price: 309, capacity: 8, rpm: 1400, energy: 'B', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.4, reviews: 77, features: ['EcoBubble', 'Hygiene Steam'], img: 'https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w6', brand: 'Miele', model: 'WDD 035 WPS', price: 449, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 64, noise: 72, condition: 'A', rating: 4.8, reviews: 52, features: ['Miele WPS', 'CapDosing'], img: 'https://images.unsplash.com/photo-1621927690138-8c2a1af68980?q=80&w=800&auto=format&fit=crop'}
+      ];
+
+      // --- Utilities ---
+      const fmtPrice = v => new Intl.NumberFormat('de-DE', {style:'currency', currency:'EUR'}).format(v);
+      function stars(r){
+        const full = Math.floor(r), half = r - full >= 0.5;
+        let s = '';
+        for(let i=0;i<5;i++){
+          if(i<full) s += '★'; else if(i===full && half) s += '☆'; else s += '✩';
+        }
+        return `<span class="text-amber-500 tracking-tight">${s}</span>`;
+      }
+
+      // --- Filter Logik ---
+      const state = { q:'', priceMax:'', capacityMin:'', energy:'', brand:'', condition:'', ratingMin:0, sortBy:'relevance', compare: new Set() };
+
+      const els = {
+        q: document.getElementById('q'), priceMax: document.getElementById('priceMax'), capacityMin: document.getElementById('capacityMin'),
+        energy: document.getElementById('energy'), brand: document.getElementById('brand'), condition: document.getElementById('condition'), ratingMin: document.getElementById('ratingMin'), sortBy: document.getElementById('sortBy'),
+        results: document.getElementById('results'), compareBtn: document.getElementById('compareBtn'), compareCount: document.getElementById('compareCount'),
+        compareModal: document.getElementById('compareModal'), compareBody: document.getElementById('compareBody'),
+        resetFilters: document.getElementById('resetFilters')
+      };
+
+      Object.entries(els).forEach(([k,el])=>{
+        if(['results','compareBtn','compareCount','compareModal','compareBody','resetFilters'].includes(k)) return;
+        el.addEventListener('input', ()=>{ state[k] = el.value; render(); });
+        el.addEventListener('change', ()=>{ state[k] = el.value; render(); });
+      });
+
+      els.resetFilters.addEventListener('click', ()=>{
+        Object.assign(state, { q:'', priceMax:'', capacityMin:'', energy:'', brand:'', condition:'', ratingMin:0, sortBy:'relevance' });
+        ['q','priceMax','capacityMin','energy','brand','condition','ratingMin','sortBy'].forEach(id=>{ els[id].value = id==='ratingMin'? '0' : '' });
+        render();
+      });
+
+      function filterAndSort(){
+        let list = PRODUCTS.filter(p=>{
+          if(state.q && !(p.brand+ ' ' + p.model).toLowerCase().includes(state.q.toLowerCase())) return false;
+          if(state.priceMax && p.price > +state.priceMax) return false;
+          if(state.capacityMin && p.capacity < +state.capacityMin) return false;
+          if(state.energy && p.energy !== state.energy) return false;
+          if(state.brand && p.brand !== state.brand) return false;
+          if(state.condition && p.condition !== state.condition) return false;
+          if(state.ratingMin && p.rating < +state.ratingMin) return false;
+          return true;
+        });
+        const cmp = {
+          relevance: (a,b)=> (b.rating*10 - a.rating*10) + (a.price - b.price)/50 + (b.reviews - a.reviews)/100,
+          priceAsc: (a,b)=> a.price - b.price,
+          priceDesc: (a,b)=> b.price - a.price,
+          ratingDesc: (a,b)=> b.rating - a.rating,
+          capacityDesc: (a,b)=> b.capacity - a.capacity,
+        }[state.sortBy];
+        return list.sort(cmp);
+      }
+
+      function render(){
+        const list = filterAndSort();
+        els.results.innerHTML = '';
+        list.forEach(p=>{
+          const inCompare = state.compare.has(p.id);
+          const card = document.createElement('div');
+          card.className = 'bg-white border rounded-3xl shadow-sm overflow-hidden flex flex-col';
+          card.innerHTML = `
+            <div class="aspect-[4/3] bg-cover bg-center" style="background-image:url('${p.img}')"></div>
+            <div class="p-4 flex-1 flex flex-col gap-3">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="text-xs text-slate-500">${p.brand}</div>
+                  <div class="font-semibold">${p.model}</div>
+                </div>
+                <label class="text-sm flex items-center gap-2 select-none">
+                  <input type="checkbox" ${inCompare? 'checked':''} data-id="${p.id}" class="compareToggle w-4 h-4"> <span>Vergleich</span>
+                </label>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="text-lg font-extrabold">${fmtPrice(p.price)}</div>
+                <div class="text-sm">${stars(p.rating)} <span class="text-slate-500">(${p.reviews})</span></div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-xs text-slate-600">
+                <div class="p-2 rounded-xl bg-slate-50 border">${p.capacity} kg</div>
+                <div class="p-2 rounded-xl bg-slate-50 border">${p.rpm} U/min</div>
+                <div class="p-2 rounded-xl bg-slate-50 border">Energie ${p.energy}</div>
+              </div>
+              <div class="flex flex-wrap gap-2 text-xs">
+                ${p.features.map(f=>`<span class="chip border-slate-200">${f}</span>`).join('')}
+                <span class="chip border-slate-200">Zustand ${p.condition}</span>
+                <span class="chip border-slate-200">${p.noise} dB</span>
+              </div>
+              <div class="mt-auto flex gap-2">
+                <button class="flex-1 px-3 py-2 rounded-xl bg-emerald-600 text-white">In den Warenkorb</button>
+                <button class="px-3 py-2 rounded-xl border" onclick="showDetails('${p.id}')">Details</button>
+              </div>
+            </div>`;
+          els.results.appendChild(card);
+        });
+        // compare toggles
+        document.querySelectorAll('.compareToggle').forEach(cb=>{
+          cb.addEventListener('change', (e)=>{
+            const id = e.target.getAttribute('data-id');
+            if(e.target.checked) state.compare.add(id); else state.compare.delete(id);
+            els.compareCount.textContent = state.compare.size;
+            els.compareBtn.disabled = state.compare.size < 2;
+          });
+        });
+      }
+
+      // Details (simple alert for demo)
+      window.showDetails = function(id){
+        const p = PRODUCTS.find(x=>x.id===id);
+        alert(`${p.brand} ${p.model}\n\n\tFüllmenge: ${p.capacity} kg\n\tDrehzahl: ${p.rpm} U/min\n\tEnergieklasse: ${p.energy}\n\tGeräusch: ${p.noise} dB\n\tZustand: ${p.condition}\n\nMerkmale: ${p.features.join(', ')}`);
+      }
+
+      // Vergleich öffnen
+      els.compareBtn.addEventListener('click', ()=>{
+        const ids = [...state.compare].slice(0,3);
+        const items = ids.map(id=>PRODUCTS.find(p=>p.id===id));
+        ['th0','th1','th2'].forEach((id,i)=>{
+          const th = document.getElementById(id);
+          th.innerHTML = items[i]? `<div class="font-semibold">${items[i].brand} ${items[i].model}</div><div class="text-sm text-slate-500">${fmtPrice(items[i].price)} · ${stars(items[i].rating)}</div>` : '';
+        });
+        const rows = [
+          ['Füllmenge', x=> x?.capacity + ' kg'],
+          ['Drehzahl', x=> x?.rpm + ' U/min'],
+          ['Energieklasse', x=> x?.energy],
+          ['Geräusch', x=> x?.noise + ' dB'],
+          ['Zustand', x=> x?.condition],
+          ['Breite', x=> x?.width + ' cm'],
+          ['Tiefe', x=> x?.depth + ' cm'],
+          ['Besonderheiten', x=> x?.features?.join(', ')],
+        ];
+        els.compareBody.innerHTML = rows.map(([label, fn])=>{
+          const cells = items.map(it=>`<td class="p-3 align-top">${it? fn(it): ''}</td>`).join('');
+          return `<tr><th class="p-3 text-left w-64 bg-slate-50">${label}</th>${cells}</tr>`;
+        }).join('');
+        els.compareModal.showModal();
+      });
+
+      // Chatbot (demo, regelbasiert)
+      const chatDialog = document.getElementById('chatDialog');
+      document.getElementById('chatFab').addEventListener('click', ()=> chatDialog.open? chatDialog.close() : chatDialog.showModal());
+      const chatLog = document.getElementById('chatLog');
+      const chatInput = document.getElementById('chatInput');
+      document.getElementById('sendMsg').addEventListener('click', (e)=>{ e.preventDefault(); sendUser(chatInput.value.trim()); chatInput.value=''; });
+
+      function sendUser(text){ if(!text) return; addBubble(text, 'user'); setTimeout(()=>botReply(text), 250); }
+      function addBubble(text, who='bot'){
+        const wrap = document.createElement('div');
+        wrap.className = `flex ${who==='user'? 'justify-end' : 'justify-start'}`;
+        const b = document.createElement('div');
+        b.className = `max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow ${who==='user'? 'bg-emerald-600 text-white' : 'bg-white border'}`;
+        b.innerHTML = text;
+        wrap.appendChild(b); chatLog.appendChild(wrap); chatLog.scrollTop = chatLog.scrollHeight;
+      }
+      function addChoices(choices){
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2';
+        choices.forEach(({label, payload})=>{
+          const btn = document.createElement('button');
+          btn.className = 'px-3 py-1.5 rounded-xl border bg-white text-sm hover:bg-slate-50';
+          btn.textContent = label; btn.addEventListener('click', (e)=>{ e.preventDefault(); sendUser(label); botReply(payload); });
+          row.appendChild(btn);
+        });
+        chatLog.appendChild(row); chatLog.scrollTop = chatLog.scrollHeight;
+      }
+
+      function botReply(text){
+        const t = text.toLowerCase();
+        if(t.includes('diagnose') || t.includes('ferndiagnose')) return startDiagnostics();
+        if(t.includes('leise') || t.includes('lautstärke') || t.includes('noise')){
+          addBubble('Für leisen Betrieb empfehlen wir Modelle ≤72 dB. Filtere nach "Min. Bewertung 4+" und vergleiche Bosch Series 6 und Samsung WW80 (beide 72 dB).');
+          addChoices([{label:'Ferndiagnose starten', payload:'diagnose'}, {label:'Leise Modelle filtern', payload:'filter:noise'}]);
+          return;
+        }
+        if(t.startsWith('filter:noise')){
+          state.ratingMin = 4; document.getElementById('ratingMin').value='4'; render();
+          addBubble('Ich habe die Filter auf Min. Bewertung 4+ gesetzt. Schau dir die Ergebnisse an.');
+          return;
+        }
+        if(t.includes('beste') || t.includes('empfehlung')){
+          const best = [...filterAndSort()].slice(0,3);
+          addBubble('Hier sind drei starke Empfehlungen (Preis/Leistung & Bewertungen):');
+          best.forEach(p=> addBubble(`• <b>${p.brand} ${p.model}</b> – ${fmtPrice(p.price)}, ${p.capacity} kg, Energie ${p.energy}, ${stars(p.rating)} (${p.reviews})`));
+          addChoices([{label:'Diese vergleichen', payload:'compareTop3'} , {label:'Ferndiagnose starten', payload:'diagnose'}]);
+          return;
+        }
+        if(t==='compareTop3' || t.includes('comparetop3')){
+          state.compare = new Set(filterAndSort().slice(0,3).map(p=>p.id));
+          document.getElementById('compareCount').textContent = state.compare.size;
+          document.getElementById('compareBtn').disabled = state.compare.size < 2;
+          addBubble('Ich habe die Top 3 zum Vergleich hinzugefügt. Klicke oben auf „Vergleichen“.');
+          return;
+        }
+        addBubble('Hi! Ich kann dir helfen beim Filtern, Vergleichen und bei einer einfachen Ferndiagnose. Frag z. B. „Welche ist leise?“ oder tippe „Ferndiagnose“.');
+        addChoices([{label:'Beste Empfehlung', payload:'beste'}, {label:'Ferndiagnose starten', payload:'diagnose'}]);
+      }
+
+      function startDiagnostics(){
+        addBubble('<b>Ferndiagnose</b>: Wähle ein Symptom.');
+        addChoices([
+          {label:'Wasser in der Trommel', payload:'diag:water'},
+          {label:'Starke Vibrationen', payload:'diag:vibe'},
+          {label:'Heizt nicht', payload:'diag:heat'},
+        ]);
+      }
+
+      function diagStep(key){
+        if(key==='diag:water'){
+          addBubble('Prüfe: 1) Flusensieb/Abfluss reinigen, 2) Ablaufschlauch nicht geknickt?, 3) „Abpumpen/Schleudern“ manuell starten. Wenn Wasser weiterhin steht: Pumpe könnte blockiert sein.');
+          addChoices([{label:'Weiter: Geräusch beim Pumpen', payload:'diag:water:noise'}, {label:'Termin anfragen', payload:'diag:book'}]);
+        } else if(key==='diag:vibe'){
+          addBubble('Prüfe: 1) Transportsicherungen entfernt, 2) Gerät ausgerichtet (Wasserwaage), 3) Beladung ausgeglichen (Mischladung).');
+          addChoices([{label:'Weiter: immer noch stark', payload:'diag:vibe:still'}, {label:'Termin anfragen', payload:'diag:book'}]);
+        } else if(key==='diag:heat'){
+          addBubble('Prüfe: 1) Programm mit 60 °C testen, 2) Eco‑Programme heizen langsamer, 3) Sieb reinigen. Bei weiterem Problem: Heizelement/NTC prüfen lassen.');
+          addChoices([{label:'Weiter: Fehlercode E..', payload:'diag:heat:code'}, {label:'Termin anfragen', payload:'diag:book'}]);
+        } else if(key==='diag:book'){
+          addBubble('Gern! Teile uns Postleitzahl und eine Zeitpräferenz mit. Wir melden uns per E‑Mail (hallo@valuehugger.example).');
+        } else {
+          addBubble('Danke, ich habe deine Angaben notiert. Bei Bedarf können wir einen Technikertermin vereinbaren.');
+        }
+      }
+
+      // Listen to diagnostic choices via botReply passthrough
+      const observer = new MutationObserver(()=>{
+        document.querySelectorAll('#chatLog button').forEach(btn=>{
+          if(btn.dataset.bound) return; btn.dataset.bound = '1';
+          btn.addEventListener('click', ()=>{
+            const map = {
+              'Ferndiagnose starten':'diagnose',
+              'Leise Modelle filtern':'filter:noise',
+              'Diese vergleichen':'compareTop3'
+            };
+            const payload = map[btn.textContent];
+            if(payload?.startsWith('diag')) diagStep(payload);
+            else if(payload==='diagnose') startDiagnostics();
+          });
+        });
+      });
+      observer.observe(chatLog, {childList:true, subtree:true});
+
+      // Theme toggle (simple)
+      const themeBtn = document.getElementById('themeToggle');
+      themeBtn.addEventListener('click', ()=>{
+        document.documentElement.classList.toggle('dark');
+        document.body.classList.toggle('bg-slate-900');
+        document.body.classList.toggle('text-slate-100');
+      });
+
+      // Init
+      document.getElementById('year').textContent = new Date().getFullYear();
+      render();
+      // Seed chat greeting
+      setTimeout(()=>{ addBubble('👋 Hallo! Ich helfe dir, die passende Waschmaschine zu finden. Möchtest du eine <b>Empfehlung</b> oder die <b>Ferndiagnose</b> starten?'); addChoices([{label:'Beste Empfehlung', payload:'beste'}, {label:'Ferndiagnose starten', payload:'diagnose'}]); }, 600);
+    </script>
+  </body>
+</html>
                 brand: 'Siemens',
                 model: 'WM12N260',
                 image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzAwNzlCRiIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMDA3OUJGIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5TaWVtZW5zPC90ZXh0Pgo8L3N2Zz4=',
