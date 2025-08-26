@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Hugger - Refurbished Waschmaschinen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .star-rating { color: #FCD34D; }
+        .filter-chip { transition: all 0.2s; }
+        .filter-chip:hover { transform: translateY(-1px); }
+        .product-card { transition: all 0.3s; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .chatbot-toggle { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="text-2xl font-bold text-primary">💧</div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Value Hugger</h1>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Refurbished Waschmaschinen</span>
+                </div>
+                <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
+                    <span class="dark:hidden">🌙</span>
+                    <span class="hidden dark:inline">☀️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Filter Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filter & Suche</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <input type="text" id="searchInput" placeholder="Marke oder Modell suchen..." 
+                       class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
+                
+                <select id="priceFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
+                    <option value="">Alle Preise</option>
+                    <option value="0-300">Bis 300€</option>
+                    <option value="300-500">300€ - 500€</option>
+                    <option value="500-800">500€ - 800€</option>
+                    <option value="800+">Über 800€</option>
+                </select>
+
+                <select id="capacityFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
+                    <option value="">Alle Kapazitäten</option>
+                    <option value="5-7">5-7 kg</option>
+                    <option value="8-9">8-9 kg</option>
+                    <option value="10+">10+ kg</option>
+                </select>
+
+                <select id="energyFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
+                    <option value="">Alle Energieklassen</option>
+                    <option value="A+++">A+++</option>
+                    <option value="A++">A++</option>
+                    <option value="A+">A+</option>
+                    <option value="A">A</option>
+                </select>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-4">
+                <label class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Marke:</span>
+                </label>
+                <div id="brandFilters" class="flex flex-wrap gap-2">
+                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Bosch">Bosch</button>
+                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Siemens">Siemens</button>
+                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Miele">Miele</button>
+                    <button class="brand-filter filter-chip px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-full" data-brand="Samsung">Samsung</button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Min. Bewertung:</span>
+                        <select id="ratingFilter" class="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+                            <option value="">Alle</option>
+                            <option value="4">4+ ⭐</option>
+                            <option value="4.5">4.5+ ⭐</option>
+                        </select>
+                    </label>
+                </div>
+                <select id="sortBy" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
+                    <option value="price-asc">Preis aufsteigend</option>
+                    <option value="price-desc">Preis absteigend</option>
+                    <option value="rating-desc">Beste Bewertung</option>
+                    <option value="capacity-desc">Größte Kapazität</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Compare Bar -->
+        <div id="compareBar" class="bg-primary text-white rounded-lg p-4 mb-6 hidden">
+            <div class="flex justify-between items-center">
+                <div>
+                    <span class="font-semibold">Vergleich (<span id="compareCount">0</span>/3)</span>
+                    <div id="compareItems" class="flex space-x-2 mt-1"></div>
+                </div>
+                <div class="space-x-2">
+                    <button id="compareBtn" class="bg-white text-primary px-4 py-2 rounded-lg font-medium hover:bg-gray-100">Vergleichen</button>
+                    <button id="clearCompare" class="bg-red-500 px-4 py-2 rounded-lg font-medium hover:bg-red-600">Leeren</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Products will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Compare Modal -->
+    <div id="compareModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Produktvergleich</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl">&times;</button>
+                </div>
+                <div id="compareContent" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Compare content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div id="chatbot" class="fixed bottom-6 right-6 z-40">
+        <button id="chatToggle" class="chatbot-toggle bg-primary text-white rounded-full p-4 shadow-lg hover:bg-blue-600">
+            💬
+        </button>
+        <div id="chatWindow" class="hidden absolute bottom-16 right-0 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border dark:border-gray-700">
+            <div class="p-4 bg-primary text-white rounded-t-lg">
+                <h3 class="font-semibold">Waschmaschinen-Berater</h3>
+                <p class="text-sm opacity-90">Fragen Sie mich alles!</p>
+            </div>
+            <div id="chatMessages" class="h-64 overflow-y-auto p-4 space-y-3">
+                <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
+                    <p class="text-sm">Hallo! Ich helfe Ihnen gerne bei der Auswahl Ihrer Waschmaschine. Was ist Ihr Budget?</p>
+                </div>
+            </div>
+            <div class="p-4 border-t dark:border-gray-700">
+                <div id="quickOptions" class="space-y-2 mb-3">
+                    <button class="chat-option w-full text-left p-2 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded" data-option="budget">💰 Budget unter 400€</button>
+                    <button class="chat-option w-full text-left p-2 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded" data-option="family">👨‍👩‍👧‍👦 Familienhaushalt (4+ Personen)</button>
+                    <button class="chat-option w-full text-left p-2 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded" data-option="diagnosis">🔧 Ferndiagnose starten</button>
+                </div>
+                <input type="text" id="chatInput" placeholder="Ihre Nachricht..." class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample product data
+        const products = [
+            {
+                id: 1,
+                brand: 'Bosch',
+                model: 'WAG28400',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzMzMzMzMyIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5Cb3NjaDwvdGV4dD4KPC9zdmc+',
+                price: 349,
+                originalPrice: 599,
+                rating: 4.2,
+                reviews: 84,
+                capacity: '9 kg',
+                energy: 'A+++',
+                condition: 'Sehr gut',
+                features: ['Aqua Stop', 'EcoSilence Drive', 'VarioTrommel'],
+                specs: {
+                    'Fassungsvermögen': '9 kg',
+                    'Energieeffizienz': 'A+++',
+                    'Schleuderdrehzahl': '1400 U/min',
+                    'Geräuschpegel': '48 dB',
+                    'Programme': '15',
+                    'Display': 'LED',
+                    'Abmessungen': '60x59x85 cm'
+                }
+            },
+            {
+                id: 2,
+                brand: 'Siemens',
+                model: 'WM14N140',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzAwNzlCRiIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMDA3OUJGIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5TaWVtZW5zPC90ZXh0Pgo8L3N2Zz4=',
+                price: 399,
+                originalPrice: 699,
+                rating: 4.5,
+                reviews: 127,
+                capacity: '8 kg',
+                energy: 'A+++',
+                condition: 'Wie neu',
+                features: ['iQdrive Motor', 'speedPack', 'Outdoor-Programm'],
+                specs: {
+                    'Fassungsvermögen': '8 kg',
+                    'Energieeffizienz': 'A+++',
+                    'Schleuderdrehzahl': '1400 U/min',
+                    'Geräuschpegel': '44 dB',
+                    'Programme': '16',
+                    'Display': 'LED',
+                    'Abmessungen': '60x55x85 cm'
+                }
+            },
+            {
+                id: 3,
+                brand: 'Miele',
+                model: 'WDB030 EcoPlus',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0U2MTUxNSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjRTYxNTE1Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5NaWVsZTwvdGV4dD4KPC9zdmc+',
+                price: 649,
+                originalPrice: 1199,
+                rating: 4.8,
+                reviews: 89,
+                capacity: '7 kg',
+                energy: 'A+++',
+                condition: 'Sehr gut',
+                features: ['ProfiEco Motor', 'QuickPowerWash', 'AddLoad'],
+                specs: {
+                    'Fassungsvermögen': '7 kg',
+                    'Energieeffizienz': 'A+++',
+                    'Schleuderdrehzahl': '1400 U/min',
+                    'Geräuschpegel': '46 dB',
+                    'Programme': '12',
+                    'Display': 'TwinDos AutoDos',
+                    'Abmessungen': '60x64x85 cm'
+                }
+            },
+            {
+                id: 4,
+                brand: 'Samsung',
+                model: 'WW90TA049AE',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0iIzFFMzA0QSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjQwIiBmaWxsPSIjNEY0NkU1Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMzAiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeD0iMzAiIHk9IjE3MCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIzMCIgcng9IjUiIGZpbGw9IiM0RjQ2RTUiLz4KPHRleHQgeD0iMTAwIiB5PSIyMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2NjY2NjYiIGZvbnQtc2l6ZT0iMTIiPlNhbXN1bmc8L3RleHQ+Cjwvc3ZnPg==',
+                price: 289,
+                originalPrice: 549,
+                rating: 4.1,
+                reviews: 156,
+                capacity: '9 kg',
+                energy: 'A+++',
+                condition: 'Gut',
+                features: ['EcoBubble', 'Digital Inverter', 'Steam Wash'],
+                specs: {
+                    'Fassungsvermögen': '9 kg',
+                    'Energieeffizienz': 'A+++',
+                    'Schleuderdrehzahl': '1400 U/min',
+                    'Geräuschpegel': '52 dB',
+                    'Programme': '14',
+                    'Display': 'Digital',
+                    'Abmessungen': '60x55x85 cm'
+                }
+            },
+            {
+                id: 5,
+                brand: 'Bosch',
+                model: 'WAT28400',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzMzMzMzMyIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5Cb3NjaDwvdGV4dD4KPC9zdmc+',
+                price: 459,
+                originalPrice: 799,
+                rating: 4.6,
+                reviews: 203,
+                capacity: '8 kg',
+                energy: 'A+++',
+                condition: 'Wie neu',
+                features: ['i-DOS', 'ActiveWater Plus', 'AllergiePlus'],
+                specs: {
+                    'Fassungsvermögen': '8 kg',
+                    'Energieeffizienz': 'A+++',
+                    'Schleuderdrehzahl': '1400 U/min',
+                    'Geräuschpegel': '47 dB',
+                    'Programme': '15',
+                    'Display': 'LED mit Touch-Control',
+                    'Abmessungen': '60x59x85 cm'
+                }
+            },
+            {
+                id: 6,
+                brand: 'Siemens',
+                model: 'WM12N260',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDIwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iIzAwNzlCRiIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjMwIiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjMDA3OUJGIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2NjY2IiBmb250LXNpemU9IjEyIj5TaWVtZW5zPC90ZXh0Pgo8L3N2Zz4=',
+                price: 279
