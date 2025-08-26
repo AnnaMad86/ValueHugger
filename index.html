@@ -33,6 +33,7 @@
         <nav class="ml-auto hidden md:flex items-center gap-6 text-sm">
           <a href="#produkte" class="hover:text-emerald-700">Produkte</a>
           <a href="#vergleich" class="hover:text-emerald-700">Vergleich</a>
+          <a href="#about" class="hover:text-emerald-700">Über uns</a>
           <a href="#faq" class="hover:text-emerald-700">FAQ</a>
           <a href="#kontakt" class="hover:text-emerald-700">Kontakt</a>
         </nav>
@@ -63,7 +64,7 @@
             </div>
           </div>
           <div class="relative">
-            <div class="aspect-[4/3] rounded-3xl bg-[url('https://images.unsplash.com/photo-1585386959984-a415522316a9?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center shadow-xl"></div>
+            <div class="aspect-[4/3] rounded-3xl bg-[url('Bilder/IMG_20250728_152152.jpg')] bg-cover bg-center shadow-xl"></div>
             <div class="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow p-4 border">
               <div class="text-xs text-slate-500">Durchschn. Kundenzufriedenheit</div>
               <div class="flex items-end gap-2">
@@ -73,6 +74,34 @@
               <div class="mt-1 flex">
                 <span class="text-amber-400">★★★★★</span>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Über uns -->
+    <section id="about" class="py-12 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-extrabold">Über uns</h2>
+        <p class="mt-2 text-slate-600 max-w-prose">Wir sind Anna und Johanna. Mit Value Hugger machen wir hochwertige, aufbereitete Waschmaschinen erschwinglich und verlängern ihren Lebenszyklus – gut für dich und die Umwelt.</p>
+        <div class="mt-8 grid sm:grid-cols-2 gap-6">
+          <!-- Anna -->
+          <div class="bg-slate-50 rounded-3xl border shadow-sm p-6 flex gap-5 items-center">
+            <div class="shrink-0 w-20 h-20 rounded-2xl bg-[url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop')] bg-cover bg-center"></div>
+            <div>
+              <div class="font-bold">Anna</div>
+              <div class="text-sm text-slate-600">Operations & Aufbereitung</div>
+              <p class="mt-2 text-sm text-slate-600">Leitet die Qualitätschecks und sorgt dafür, dass jedes Gerät wie neu läuft.</p>
+            </div>
+          </div>
+          <!-- Johanna -->
+          <div class="bg-slate-50 rounded-3xl border shadow-sm p-6 flex gap-5 items-center">
+            <div class="shrink-0 w-20 h-20 rounded-2xl bg-[url('https://images.unsplash.com/photo-1545996124-0501ebae84d0?q=80&w=256&auto=format&fit=crop')] bg-cover bg-center"></div>
+            <div>
+              <div class="font-bold">Johanna</div>
+              <div class="text-sm text-slate-600">Kundenerlebnis & Nachhaltigkeit</div>
+              <p class="mt-2 text-sm text-slate-600">Kümmert sich um Transparenz, Beratung und faire Preise – mit Fokus auf Impact.</p>
             </div>
           </div>
         </div>
@@ -261,12 +290,12 @@
     <script>
       // --- Demo Daten ---
       const PRODUCTS = [
-        {id: 'w1', brand: 'Bosch', model: 'Series 6 WUU28T40', price: 339, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.7, reviews: 183, features: ['AquaStop', 'EcoSilence', 'Kurz 15'], img: 'https://images.unsplash.com/photo-1585386959984-a415522316a9?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w2', brand: 'Siemens', model: 'iQ500 WM14G491', price: 319, capacity: 9, rpm: 1400, energy: 'B', width: 60, depth: 59, noise: 74, condition: 'B', rating: 4.5, reviews: 95, features: ['varioSpeed', 'iQdrive'], img: 'https://images.unsplash.com/photo-1582571352031-7f14b4c07113?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w3', brand: 'AEG', model: 'L7FE74485', price: 299, capacity: 8, rpm: 1600, energy: 'B', width: 60, depth: 57, noise: 76, condition: 'A', rating: 4.6, reviews: 121, features: ['ProSteam', 'ProSense'], img: 'https://images.unsplash.com/photo-1586201375761-83865001e31b?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w4', brand: 'LG', model: 'F4WV508S0', price: 289, capacity: 8, rpm: 1400, energy: 'C', width: 60, depth: 56, noise: 73, condition: 'B', rating: 4.3, reviews: 64, features: ['AI Direct Drive', 'Steam+'], img: 'https://images.unsplash.com/photo-1580206169160-4c68a1e14962?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w5', brand: 'Samsung', model: 'WW80T534AAX', price: 309, capacity: 8, rpm: 1400, energy: 'B', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.4, reviews: 77, features: ['EcoBubble', 'Hygiene Steam'], img: 'https://images.unsplash.com/photo-1581579188871-45ea61f2a0c8?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w6', brand: 'Miele', model: 'WDD 035 WPS', price: 449, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 64, noise: 72, condition: 'A', rating: 4.8, reviews: 52, features: ['Miele WPS', 'CapDosing'], img: 'https://images.unsplash.com/photo-1580216206475-9e129c6f9f45?q=80&w=800&auto=format&fit=crop'}
+        {id: 'w1', brand: 'Bosch', model: 'Series 6 WUU28T40', price: 339, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.7, reviews: 183, features: ['AquaStop', 'EcoSilence', 'Kurz 15'], img: 'Bilder/IMG_20250728_152152.jpg'},
+        {id: 'w2', brand: 'Siemens', model: 'iQ500 WM14G491', price: 319, capacity: 9, rpm: 1400, energy: 'B', width: 60, depth: 59, noise: 74, condition: 'B', rating: 4.5, reviews: 95, features: ['varioSpeed', 'iQdrive'], img: 'Bilder/Privileg.jpg'},
+        {id: 'w3', brand: 'AEG', model: 'L7FE74485', price: 299, capacity: 8, rpm: 1600, energy: 'B', width: 60, depth: 57, noise: 76, condition: 'A', rating: 4.6, reviews: 121, features: ['ProSteam', 'ProSense'], img: 'Bilder/BCO.e771d99c-3ba8-46d3-8b64-7bd2b7925790.png'},
+        {id: 'w4', brand: 'LG', model: 'F4WV508S0', price: 289, capacity: 8, rpm: 1400, energy: 'C', width: 60, depth: 56, noise: 73, condition: 'B', rating: 4.3, reviews: 64, features: ['AI Direct Drive', 'Steam+'], img: 'Bilder/IMG_20250728_152152.jpg'},
+        {id: 'w5', brand: 'Samsung', model: 'WW80T534AAX', price: 309, capacity: 8, rpm: 1400, energy: 'B', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.4, reviews: 77, features: ['EcoBubble', 'Hygiene Steam'], img: 'Bilder/Privileg.jpg'},
+        {id: 'w6', brand: 'Miele', model: 'WDD 035 WPS', price: 449, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 64, noise: 72, condition: 'A', rating: 4.8, reviews: 52, features: ['Miele WPS', 'CapDosing'], img: 'Bilder/BCO.e771d99c-3ba8-46d3-8b64-7bd2b7925790.png'}
       ];
 
       // --- Utilities ---
