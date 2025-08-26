@@ -132,7 +132,21 @@
     <!-- Filter & Produkte -->
     <section id="produkte" class="py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Breadcrumbs / Category Header -->
+        <nav aria-label="breadcrumb" class="text-sm text-slate-600 flex items-center gap-2">
+          <a href="#" class="hover:underline">Home</a>
+          <span>›</span>
+          <a href="#" class="hover:underline">Produkte</a>
+          <span>›</span>
+          <span class="text-slate-400">Elektrogroßgeräte</span>
+        </nav>
+        <div class="mt-2 flex items-end justify-between flex-wrap gap-3">
+          <div>
+            <h1 class="text-2xl font-extrabold">Elektrogroßgeräte</h1>
+            <div class="text-slate-600 text-sm">Refurbished Waschmaschinen – bis zu 40% günstiger als neu</div>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-col lg:flex-row gap-8">
           <!-- Filter -->
           <aside class="lg:w-80 flex-shrink-0 space-y-4">
             <div class="p-5 rounded-3xl border bg-white shadow-sm">
@@ -203,11 +217,29 @@
 
           <!-- Produktliste -->
           <div class="flex-1">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-2xl font-extrabold">Verfügbare Geräte</h2>
+            <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
+              <h2 class="text-xl font-extrabold">Verfügbare Geräte</h2>
+              <div class="flex items-center gap-2 ml-auto">
+                <label class="text-sm text-slate-600">Sortieren:</label>
+                <select id="sortByTop" class="border rounded-xl px-3 py-2 text-sm">
+                  <option value="relevance">Empfehlung</option>
+                  <option value="priceAsc">Preis ↑</option>
+                  <option value="priceDesc">Preis ↓</option>
+                  <option value="ratingDesc">Bewertung ↓</option>
+                  <option value="capacityDesc">Füllmenge ↓</option>
+                </select>
               <button id="compareBtn" class="px-4 py-2 rounded-xl border bg-white shadow-sm disabled:opacity-50">Vergleichen (<span id="compareCount">0</span>)</button>
+              </div>
             </div>
             <div id="results" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+            <div class="mt-6 flex items-center justify-between gap-3 flex-wrap">
+              <div class="text-sm text-slate-600">Seite <span id="pageCurr">1</span> von <span id="pageTotal">1</span></div>
+              <div class="flex items-center gap-2">
+                <button id="prevPage" class="px-3 py-2 rounded-xl border disabled:opacity-50">Zurück</button>
+                <div id="pageNumbers" class="flex items-center gap-1 text-sm"></div>
+                <button id="nextPage" class="px-3 py-2 rounded-xl border disabled:opacity-50">Weiter</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -333,7 +365,7 @@
       }
 
       // --- Filter Logik ---
-      const state = { q:'', priceMax:'', capacityMin:'', energy:'', brand:'', condition:'', ratingMin:0, sortBy:'relevance', compare: new Set() };
+      const state = { q:'', priceMax:'', capacityMin:'', energy:'', brand:'', condition:'', ratingMin:0, sortBy:'relevance', compare: new Set(), page:1, pageSize:6 };
 
       const els = {
         q: document.getElementById('q'), priceMax: document.getElementById('priceMax'), capacityMin: document.getElementById('capacityMin'),
@@ -350,7 +382,7 @@
       });
 
       els.resetFilters.addEventListener('click', ()=>{
-        Object.assign(state, { q:'', priceMax:'', capacityMin:'', energy:'', brand:'', condition:'', ratingMin:0, sortBy:'relevance' });
+        Object.assign(state, { q:'', priceMax:'', capacityMin:'', energy:'', brand:'', condition:'', ratingMin:0, sortBy:'relevance', page:1 });
         ['q','priceMax','capacityMin','energy','brand','condition','ratingMin','sortBy'].forEach(id=>{ els[id].value = id==='ratingMin'? '0' : '' });
         render();
       });
@@ -378,8 +410,14 @@
 
       function render(){
         const list = filterAndSort();
+        // pagination
+        const total = list.length;
+        const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+        if(state.page > totalPages) state.page = totalPages;
+        const start = (state.page - 1) * state.pageSize;
+        const pageItems = list.slice(start, start + state.pageSize);
         els.results.innerHTML = '';
-        list.forEach(p=>{
+        pageItems.forEach(p=>{
           const inCompare = state.compare.has(p.id);
           const card = document.createElement('div');
           card.className = 'bg-white border rounded-3xl shadow-sm overflow-hidden flex flex-col';
@@ -425,7 +463,37 @@
             els.compareBtn.disabled = state.compare.size < 2;
           });
         });
+        // update pagination controls
+        const pageCurr = document.getElementById('pageCurr');
+        const pageTotal = document.getElementById('pageTotal');
+        const prevPage = document.getElementById('prevPage');
+        const nextPage = document.getElementById('nextPage');
+        const pageNumbers = document.getElementById('pageNumbers');
+        if(pageCurr) pageCurr.textContent = String(state.page);
+        if(pageTotal) pageTotal.textContent = String(totalPages);
+        if(prevPage) prevPage.disabled = state.page <= 1;
+        if(nextPage) nextPage.disabled = state.page >= totalPages;
+        if(pageNumbers){
+          pageNumbers.innerHTML = '';
+          const maxButtons = 5;
+          const startPage = Math.max(1, state.page - 2);
+          const endPage = Math.min(totalPages, startPage + maxButtons - 1);
+          for(let p=startPage; p<=endPage; p++){
+            const btn = document.createElement('button');
+            btn.className = `px-3 py-1 rounded-lg border ${p===state.page? 'bg-emerald-600 text-white' : 'bg-white'}`;
+            btn.textContent = String(p);
+            btn.addEventListener('click', ()=>{ state.page = p; render(); });
+            pageNumbers.appendChild(btn);
+          }
+        }
       }
+      // sync top sort select
+      const sortByTop = document.getElementById('sortByTop');
+      if(sortByTop){
+        sortByTop.addEventListener('change', ()=>{ state.sortBy = sortByTop.value; document.getElementById('sortBy').value = state.sortBy; render(); });
+      }
+      document.getElementById('prevPage')?.addEventListener('click', ()=>{ if(state.page>1){ state.page--; render(); }});
+      document.getElementById('nextPage')?.addEventListener('click', ()=>{ state.page++; render(); });
 
       // Details (simple alert for demo)
       window.showDetails = function(id){
