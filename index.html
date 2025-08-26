@@ -63,7 +63,7 @@
             </div>
           </div>
           <div class="relative">
-            <div class="aspect-[4/3] rounded-3xl bg-[url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center shadow-xl"></div>
+            <div class="aspect-[4/3] rounded-3xl bg-[url('https://images.unsplash.com/photo-1585386959984-a415522316a9?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center shadow-xl"></div>
             <div class="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow p-4 border">
               <div class="text-xs text-slate-500">Durchschn. Kundenzufriedenheit</div>
               <div class="flex items-end gap-2">
@@ -261,12 +261,12 @@
     <script>
       // --- Demo Daten ---
       const PRODUCTS = [
-        {id: 'w1', brand: 'Bosch', model: 'Series 6 WUU28T40', price: 339, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.7, reviews: 183, features: ['AquaStop', 'EcoSilence', 'Kurz 15'], img: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w2', brand: 'Siemens', model: 'iQ500 WM14G491', price: 319, capacity: 9, rpm: 1400, energy: 'B', width: 60, depth: 59, noise: 74, condition: 'B', rating: 4.5, reviews: 95, features: ['varioSpeed', 'iQdrive'], img: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w3', brand: 'AEG', model: 'L7FE74485', price: 299, capacity: 8, rpm: 1600, energy: 'B', width: 60, depth: 57, noise: 76, condition: 'A', rating: 4.6, reviews: 121, features: ['ProSteam', 'ProSense'], img: 'https://images.unsplash.com/photo-1564445824725-3d2f1f9b9d02?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w4', brand: 'LG', model: 'F4WV508S0', price: 289, capacity: 8, rpm: 1400, energy: 'C', width: 60, depth: 56, noise: 73, condition: 'B', rating: 4.3, reviews: 64, features: ['AI Direct Drive', 'Steam+'], img: 'https://images.unsplash.com/photo-1502021680532-838cfc650323?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w5', brand: 'Samsung', model: 'WW80T534AAX', price: 309, capacity: 8, rpm: 1400, energy: 'B', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.4, reviews: 77, features: ['EcoBubble', 'Hygiene Steam'], img: 'https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?q=80&w=800&auto=format&fit=crop'},
-        {id: 'w6', brand: 'Miele', model: 'WDD 035 WPS', price: 449, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 64, noise: 72, condition: 'A', rating: 4.8, reviews: 52, features: ['Miele WPS', 'CapDosing'], img: 'https://images.unsplash.com/photo-1621927690138-8c2a1af68980?q=80&w=800&auto=format&fit=crop'}
+        {id: 'w1', brand: 'Bosch', model: 'Series 6 WUU28T40', price: 339, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.7, reviews: 183, features: ['AquaStop', 'EcoSilence', 'Kurz 15'], img: 'https://images.unsplash.com/photo-1585386959984-a415522316a9?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w2', brand: 'Siemens', model: 'iQ500 WM14G491', price: 319, capacity: 9, rpm: 1400, energy: 'B', width: 60, depth: 59, noise: 74, condition: 'B', rating: 4.5, reviews: 95, features: ['varioSpeed', 'iQdrive'], img: 'https://images.unsplash.com/photo-1582571352031-7f14b4c07113?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w3', brand: 'AEG', model: 'L7FE74485', price: 299, capacity: 8, rpm: 1600, energy: 'B', width: 60, depth: 57, noise: 76, condition: 'A', rating: 4.6, reviews: 121, features: ['ProSteam', 'ProSense'], img: 'https://images.unsplash.com/photo-1586201375761-83865001e31b?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w4', brand: 'LG', model: 'F4WV508S0', price: 289, capacity: 8, rpm: 1400, energy: 'C', width: 60, depth: 56, noise: 73, condition: 'B', rating: 4.3, reviews: 64, features: ['AI Direct Drive', 'Steam+'], img: 'https://images.unsplash.com/photo-1580206169160-4c68a1e14962?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w5', brand: 'Samsung', model: 'WW80T534AAX', price: 309, capacity: 8, rpm: 1400, energy: 'B', width: 60, depth: 55, noise: 72, condition: 'A', rating: 4.4, reviews: 77, features: ['EcoBubble', 'Hygiene Steam'], img: 'https://images.unsplash.com/photo-1581579188871-45ea61f2a0c8?q=80&w=800&auto=format&fit=crop'},
+        {id: 'w6', brand: 'Miele', model: 'WDD 035 WPS', price: 449, capacity: 8, rpm: 1400, energy: 'A', width: 60, depth: 64, noise: 72, condition: 'A', rating: 4.8, reviews: 52, features: ['Miele WPS', 'CapDosing'], img: 'https://images.unsplash.com/photo-1580216206475-9e129c6f9f45?q=80&w=800&auto=format&fit=crop'}
       ];
 
       // --- Utilities ---
